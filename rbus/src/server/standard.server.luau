@@ -1,0 +1,26 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local rbus = require(ReplicatedStorage.Shared.rbus)
+local property = require(ReplicatedStorage.Shared.rbus.property)
+local signal = require(ReplicatedStorage.Shared.rbus.signal)
+
+local player = rbus.new("com.roblox.player")
+    :signal("added", signal())
+    :signal("removing", signal())
+    :property("count", property(0))
+    :build()
+
+rbus.new("org.fucker.no")
+    :signal("shit", signal())
+    :build()
+
+game:GetService("Players").PlayerAdded:Connect(function(plr)
+    local count = player.properties["count"]:get()
+    player.properties["count"]:set(count - 1)
+    player.signals["added"]:fire(plr)
+end)
+
+game:GetService("Players").PlayerRemoving:Connect(function(plr)
+    local count = player.properties["count"]:get()
+    player.properties["count"]:set(count - 1)
+    player.signals["removing"]:fire(plr)
+end)
